@@ -7,8 +7,18 @@ import Bbslist from "./bbs/Bbslist";
 import Bbswrite from "./bbs/Bbswrite";
 import BbsDetail from "./bbs/BbsDetail";
 import Login from "./auth/Login";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [login, setLogin] = useState(null);
+  useEffect(() => {
+    setLogin(localStorage.getItem("login"));
+  }, []);
+  const handleLogout = () => {
+    // 로그아웃 시에 수행할 작업
+    localStorage.removeItem("login");
+    setLogin(null);
+  };
   return (
     <div>
       <header className="py-4">
@@ -33,11 +43,19 @@ function App() {
                     게시판
                   </Link>
                 </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">
-                    로그인
-                  </Link>
-                </li>
+                {login ? (
+                  <li className="nav-item">
+                    <div style={{ cursor: "pointer" }} className="nav-link" onClick={handleLogout}>
+                      로그아웃
+                    </div>
+                  </li>
+                ) : (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/login">
+                      로그인
+                    </Link>
+                  </li>
+                )}
               </ul>
             </div>
           </div>
@@ -49,7 +67,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/bbslist" element={<Bbslist />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<Login setLogin={setLogin} />} />
                 <Route path="/bbswrite" element={<Bbswrite />} />
                 <Route path="/bbsdetail/:seq" element={<BbsDetail />} />
               </Routes>

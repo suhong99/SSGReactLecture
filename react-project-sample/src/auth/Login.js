@@ -11,7 +11,7 @@ const centerStyle = {
   borderRadius: "30px",
 };
 
-const Login = () => {
+const Login = ({ setLogin }) => {
   const navi = useNavigate();
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
@@ -72,6 +72,7 @@ const Login = () => {
           setId("");
           setPwd("");
           navi("/");
+          setLogin(resp.data.id);
         } else {
           alert("입력하신 정보가 틀렸습니다.");
           setPwd("");
