@@ -5,13 +5,15 @@ import "./main.css"; // footer를 하단에 고정
 import Home from "./component/Home";
 import Bbslist from "./bbs/Bbslist";
 import Bbswrite from "./bbs/Bbswrite";
+import BbsDetail from "./bbs/BbsDetail";
+import Login from "./auth/Login";
 
 function App() {
   return (
     <div>
       <header className="py-4">
         <div className="container text-center">
-          <img alt="no" src="header.jpg" width="960" height="150" />
+          <img alt="no" src="/header.jpg" width="960" height="150" />
         </div>
       </header>
 
@@ -31,6 +33,11 @@ function App() {
                     게시판
                   </Link>
                 </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login">
+                    로그인
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
@@ -41,9 +48,10 @@ function App() {
             <div className="container">
               <Routes>
                 <Route path="/" element={<Home />} />
-
                 <Route path="/bbslist" element={<Bbslist />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="/bbswrite" element={<Bbswrite />} />
+                <Route path="/bbsdetail/:seq" element={<BbsDetail />} />
               </Routes>
             </div>
           </div>
