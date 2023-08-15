@@ -2,10 +2,11 @@ import axios from "axios";
 
 export const bbsdetailButtonHandler = (name, navigation, payload) => {
   if (name === "reply") {
-    navigation("/");
+    navigation(`/bbsanswer/${payload.seq}/${payload.originalTitle}`);
   }
 
   if (name === "update") {
+    navigation("/bbsupdate/" + payload);
   }
 
   if (name === "delete") {

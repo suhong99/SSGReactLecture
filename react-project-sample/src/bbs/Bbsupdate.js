@@ -1,29 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import "./Bbswrite.css";
 
-function Bbswrite() {
+function Bbsupdate() {
   let navigate = useNavigate();
+  const { seq } = useParams();
 
   const id = localStorage.getItem("login");
+  const [isLoading, setIsLoading] = useState(false);
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
+  const getBbsDetail = async (seq) => {
+    await axios
+      .get("http://localhost:3000/bbsdetail", { params: { seq } })
+      .then((resp) => {
+        setTitle(resp.data.title);
+        setContent(resp.data.content);
+
+        setIsLoading(true);
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
+
+  useEffect(() => {
+    const login = localStorage.getItem("login");
+    if (login !== null) {
+      //const id = JSON.parse(login).id;
+      getBbsDetail(seq);
+    } else {
+      alert("로그인해 주십시오");
+    }
+  }, [seq]);
+
   // useRef : element를 접근 current
 
-  function writeBbs() {
+  function updateBbs() {
     if (title === undefined || title.trim() === "") {
       alert("제목을 작성해 주십시오");
       return;
     }
 
     axios
-      .post("http://localhost:3000/bbswrite", null, { params: { id: id, title: title, content: content } })
+      .post("http://localhost:3000/bbsupdate", null, { params: { id, title, content, seq } })
       .then((resp) => {
         // alert(resp.data);
-        alert("등록되었습니다");
+        alert("수정되었습니다");
 
         navigate("/bbslist");
       })
@@ -31,10 +58,11 @@ function Bbswrite() {
         alert(err);
       });
   }
-
+  if (!isLoading) {
+    <div>loading...</div>;
+  }
   return (
     <div className="center">
-      {/* <h1>글쓰기</h1> */}
       <table className="table table-bordered">
         <colgroup>
           <col width="200" />
@@ -66,8 +94,8 @@ function Bbswrite() {
         </tbody>
       </table>
       <div className="my-5 d-flex justify-content-center">
-        <button onClick={writeBbs} className="btn btn-primary">
-          작성완료
+        <button onClick={updateBbs} className="btn btn-primary">
+          수정완료
         </button>
       </div>
 
@@ -77,4 +105,4 @@ function Bbswrite() {
   );
 }
 
-export default Bbswrite;
+export default Bbsupdate;

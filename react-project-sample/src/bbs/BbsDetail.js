@@ -90,7 +90,7 @@ const BbsDetail = () => {
             type="button"
             className="btn btn-primary"
             style={{ marginLeft: "5px" }}
-            onClick={() => bbsdetailButtonHandler("reply", navigation)}
+            onClick={() => bbsdetailButtonHandler("reply", navigation, { seq, originalTitle: detail.title })}
           >
             답글
           </button>
@@ -98,7 +98,7 @@ const BbsDetail = () => {
             type="button"
             className="btn btn-primary"
             style={{ marginLeft: "5px" }}
-            onClick={() => bbsdetailButtonHandler("update", navigation)}
+            onClick={() => bbsdetailButtonHandler("update", navigation, seq)}
           >
             글수정
           </button>

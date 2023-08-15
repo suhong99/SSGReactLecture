@@ -8,6 +8,8 @@ import Bbswrite from "./bbs/Bbswrite";
 import BbsDetail from "./bbs/BbsDetail";
 import Login from "./auth/Login";
 import { useEffect, useState } from "react";
+import Bbsupdate from "./bbs/Bbsupdate";
+import Bbsanswer from "./bbs/Bbsanswer";
 
 function App() {
   const [login, setLogin] = useState(null);
@@ -70,6 +72,8 @@ function App() {
                 <Route path="/login" element={<Login setLogin={setLogin} />} />
                 <Route path="/bbswrite" element={<Bbswrite />} />
                 <Route path="/bbsdetail/:seq" element={<BbsDetail />} />
+                <Route path="/bbsupdate/:seq" element={<Bbsupdate />} />
+                <Route path="/bbsanswer/:seq/:originalTitle" element={<Bbsanswer />} />
               </Routes>
             </div>
           </div>
