@@ -7,6 +7,11 @@ const BbsDetail = () => {
   const { seq } = useParams();
   const navigation = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [isCommentLoading, setIsCommentLoading] = useState(false);
+  const login = localStorage.getItem("login");
+
+  const [commentLists, setCommentLists] = useState([{ seq: 0, id: "", content: "", wdate: "" }]);
+  const [commentContent, setCommentContent] = useState("");
   const [detail, setDetail] = useState({
     content: "",
     del: 0,
@@ -32,15 +37,62 @@ const BbsDetail = () => {
       });
   };
 
+  const writeComment = () => {
+    if (commentContent === undefined || commentContent.trim() === "") {
+      alert("내용을 작성해 주십시오");
+      return;
+    }
+
+    axios
+      .post("http://localhost:3000/commentWrite", null, { params: { id: login, content: commentContent, seq } })
+      .then(({ data }) => {
+        if (data === "YES") {
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = String(now.getMonth() + 1).padStart(2, "0");
+          const day = String(now.getDate()).padStart(2, "0");
+          const hours = String(now.getHours()).padStart(2, "0");
+          const minutes = String(now.getMinutes()).padStart(2, "0");
+          const seconds = String(now.getSeconds()).padStart(2, "0");
+
+          const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+          setCommentLists([
+            { seq: commentLists[0].seq + 1, id: login, content: commentContent, wdate: formattedDateTime },
+            ...commentLists,
+          ]);
+        }
+        if (data === "NO") {
+          alert("작성에 실패하였습니다.");
+        }
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  };
+
+  const getCommentList = async (seq) => {
+    // alert(seq); //14
+    await axios
+      .get("http://localhost:3000/commentList", { params: { seq } })
+      .then((resp) => {
+        setCommentLists(resp.data);
+        setIsCommentLoading(true);
+        // console.log(resp.data);
+      })
+      .catch((err) => {
+        alert("실패");
+      });
+  };
+
   useEffect(() => {
-    const login = localStorage.getItem("login");
     if (login !== null) {
       //const id = JSON.parse(login).id;
       getBbsDetail(seq);
+      getCommentList(seq);
     } else {
       alert("로그인해 주십시오");
     }
-  }, [seq]);
+  }, [seq, login]);
 
   if (!isLoading) {
     <div>loading...</div>;
@@ -112,6 +164,64 @@ const BbsDetail = () => {
           </button>
         </div>
       </div>
+      <br />
+      {/*  댓글 */}
+      <div>
+        <table>
+          <colgroup>
+            <col width="900px" />
+            <col width="120px" />
+          </colgroup>
+          <tbody>
+            <tr>
+              <td>comment</td>
+              {/* <td style={{ paddingLeft: "30px" }}>올리기</td> */}
+            </tr>
+            <tr>
+              <td>
+                <textarea
+                  rows="3"
+                  className="form-control"
+                  value={commentContent}
+                  onChange={(e) => setCommentContent(e.target.value)}
+                ></textarea>
+              </td>
+              <td style={{ paddingLeft: "30px" }}>
+                <button type="button" className="btn btn-primary btn-block p-4" onClick={writeComment}>
+                  완료
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <br />
+      <br />
+
+      <table className="table table-sm">
+        <colgroup>
+          <col width="200" />
+          <col width="200" />
+        </colgroup>
+
+        <tbody>
+          {isCommentLoading &&
+            commentLists.map((comment, index) => {
+              return (
+                <React.Fragment key={index}>
+                  <tr className="table-info" key={index}>
+                    <td>작성자: {comment.id}</td>
+                    <td>작성일: {comment.wdate}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}> {comment.content}</td>
+                  </tr>
+                </React.Fragment>
+              );
+            })}
+        </tbody>
+      </table>
       <br />
       <br />
       <br />

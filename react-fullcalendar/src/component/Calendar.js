@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
 import FullCalendar from "@fullcalendar/react";
-import DayGridPlugin from "@fullcalendar/daygrid";
-import TimeGridPlugin from "@fullcalendar/timegrid";
-import ListMonth from "@fullcalendar/list";
-import InteractionPlugin from "@fullcalendar/interaction";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import listMonth from "@fullcalendar/list";
+import interactionPlugin from "@fullcalendar/interaction";
 
 import "./Calendar.css";
 
@@ -63,7 +63,7 @@ const Calendar = () => {
         locale={"ko"} // 한국어
         navLinks={true} // 오른쪽 상단의 week를 클릭 날짜를 클릭
         businessHours={true} // 주말을 다른 색으로
-        plugins={[DayGridPlugin, TimeGridPlugin, ListMonth, InteractionPlugin]}
+        plugins={[dayGridPlugin, timeGridPlugin, listMonth, interactionPlugin]}
         initialView="dayGridMonth"
         eventClick={eventCLick}
         ref={calendarRef}
