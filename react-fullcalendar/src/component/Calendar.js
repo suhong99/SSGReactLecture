@@ -61,7 +61,7 @@ const Calendar = () => {
           end: "dayGridMonth timeGridWeek timeGridDay listMonth",
         }}
         locale={"ko"} // 한국어
-        navLinks={true} // 오른쪽 상단의 week를 클릭 날짜를 클릭
+        navLinks={true} // 오른쪽 상단의 day 클릭 대신 날짜를 클릭
         businessHours={true} // 주말을 다른 색으로
         plugins={[dayGridPlugin, timeGridPlugin, listMonth, interactionPlugin]}
         initialView="dayGridMonth"
