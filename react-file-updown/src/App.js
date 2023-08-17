@@ -49,7 +49,7 @@ function App() {
             setName(e.target.value);
           }}
           placeholder="name"
-        />{" "}
+        />
         <br />
         <input
           value={address}
