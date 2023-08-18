@@ -4,9 +4,9 @@ import { TextContext } from "./First";
 const Third = () => {
   const msg = useContext(TextContext);
   return (
-    <div>
+    <div style={{ backgroundColor: "red" }}>
       <h4>Third Component</h4>
-      <p>{msg}</p>
+      <input onChange={(e) => e} value={{ msg }}></input>
     </div>
   );
 };
