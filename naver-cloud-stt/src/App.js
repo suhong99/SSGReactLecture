@@ -10,7 +10,6 @@ const App = () => {
 
     let formData = new FormData();
     formData.append("uploadFile", document.frm.uploadFile.files[0]);
-    console.log(setIsLoading);
     setIsLoading(true);
     //send
     axios
