@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axiosInstance from "./api/axiosinstance";
 
 interface Prediction {
   num_detections: number;
@@ -18,16 +18,21 @@ const App: React.FC = () => {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData();
 
+    const formData = new FormData();
     const uploadFileInput = document.forms.namedItem("frm")?.uploadFile;
-    if (uploadFileInput.files.length > 0) {
+
+    if (uploadFileInput && uploadFileInput.files && uploadFileInput.files.length > 0) {
       formData.append("uploadFile", uploadFileInput.files[0]);
 
       setIsLoading(true);
 
-      axios
-        .post<ResponseData>("http://localhost:3000/fileODT", formData)
+      axiosInstance
+        .post<ResponseData>("fileODT", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data", // 파일 업로드 헤더
+          },
+        }) // 파일 업로드 요청
         .then(({ data }) => {
           setCount(data.predictions[0].num_detections);
           setResp(data.predictions[0].detection_names);
@@ -44,7 +49,7 @@ const App: React.FC = () => {
     <div>
       <h2>이미지 파일 업로드</h2>
       <form name="frm" onSubmit={onSubmit} encType="multipart/form-data">
-        <input type="file" name="uploadFile" accept="image/*" />
+        <input type="file" name="uploadFile" accept="*" />
         {!isLoading && <input type="submit" value="파일전송" />}
       </form>
       <p>결과: {count}</p>
