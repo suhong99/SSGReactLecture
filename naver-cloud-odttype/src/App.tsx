@@ -22,7 +22,7 @@ const App: React.FC = () => {
     const formData = new FormData();
     const uploadFileInput = document.forms.namedItem("frm")?.uploadFile;
 
-    if (uploadFileInput && uploadFileInput.files && uploadFileInput.files.length > 0) {
+    if (uploadFileInput.files.length > 0) {
       formData.append("uploadFile", uploadFileInput.files[0]);
 
       setIsLoading(true);
@@ -34,6 +34,8 @@ const App: React.FC = () => {
           },
         }) // 파일 업로드 요청
         .then(({ data }) => {
+          // .then((resp) => {
+          //   const data = resp.data;
           setCount(data.predictions[0].num_detections);
           setResp(data.predictions[0].detection_names);
           setIsLoading(false);
