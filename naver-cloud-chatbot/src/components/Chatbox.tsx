@@ -1,9 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 
-import "./Chatbox.css";
-import axios from "axios";
+import './Chatbox.css';
+import axios from 'axios';
 
-type Cover = { type: "image"; title: string; data: { imageUrl: string; description: string } };
+type Cover = {
+  type: 'image';
+  title: string;
+  data: { imageUrl: string; description: string };
+};
 
 type ChatBotResponse = {
   bubbles: Array<{
@@ -17,18 +21,18 @@ type ChatBotResponse = {
 };
 
 const Chatbox = () => {
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement | null>(null); // Set initial value to null
 
   const sendBtn = () => {
-    const rootElement = document.getElementById("chatbox"); // 채팅 div
-    let element = document.createElement("div");
+    const rootElement = document.getElementById('chatbox'); // 채팅 div
+    let element = document.createElement('div');
     element.innerHTML = message;
-    element.setAttribute("class", "usermsg");
+    element.setAttribute('class', 'usermsg');
     rootElement?.appendChild(element);
-    rootElement?.appendChild(document.createElement("br"));
+    rootElement?.appendChild(document.createElement('br'));
     axios
-      .get("http://localhost:3000/chatBot?msg=" + message)
+      .get('http://localhost:3000/chatBot?msg=' + message)
       .then((resp) => {
         ChatBotAnswer(resp.data);
       })
@@ -40,46 +44,48 @@ const Chatbox = () => {
   const ChatBotAnswer = (resp: ChatBotResponse) => {
     if (resp.bubbles[0].type) {
       const bubbles = resp.bubbles[0];
-      if (bubbles.type === "text") {
+      if (bubbles.type === 'text') {
         ChatBotText(bubbles.data.description);
-      } else if (bubbles.type === "template") {
+      } else if (bubbles.type === 'template') {
         //image
         if (resp.bubbles[0].data.cover) {
           ChatBotImage(resp.bubbles[0].data.cover.data.imageUrl);
         }
       }
     }
-    scrollRef.current && (scrollRef.current.scrollTop = scrollRef.current.scrollHeight);
+    scrollRef.current &&
+      (scrollRef.current.scrollTop = scrollRef.current.scrollHeight);
   };
 
   const ChatBotText = (str: string) => {
-    const rootElement = document.getElementById("chatbox"); // 채팅 div
-    let element = document.createElement("div");
-    element.setAttribute("align", "right");
-    let elementInner = document.createElement("div");
+    const rootElement = document.getElementById('chatbox'); // 채팅 div
+    let element = document.createElement('div');
+    element.setAttribute('align', 'right');
+    let elementInner = document.createElement('div');
     elementInner.innerHTML = str;
-    elementInner.setAttribute("class", "botmsg");
+    elementInner.setAttribute('class', 'botmsg');
     element.appendChild(elementInner);
     rootElement?.appendChild(element);
-    rootElement?.appendChild(document.createElement("br"));
+    rootElement?.appendChild(document.createElement('br'));
   };
 
   const ChatBotImage = (url: string) => {
-    const rootElement = document.getElementById("chatbox"); // 채팅 div
-    let element = document.createElement("div");
-    element.setAttribute("align", "right");
+    const rootElement = document.getElementById('chatbox'); // 채팅 div
+    let element = document.createElement('div');
+    element.setAttribute('align', 'right');
 
-    let elementInner = document.createElement("img");
-    elementInner.setAttribute("src", url);
-    elementInner.setAttribute("width", "200px");
-    elementInner.setAttribute("height", "140px");
+    let elementInner = document.createElement('img');
+    elementInner.setAttribute('src', url);
+    elementInner.setAttribute('width', '200px');
+    elementInner.setAttribute('height', '140px');
     element.appendChild(elementInner);
     rootElement?.appendChild(element);
-    rootElement?.appendChild(document.createElement("br"));
+    rootElement?.appendChild(document.createElement('br'));
   };
   useEffect(() => {
     // 현재 스크롤의 위치 와 길이
-    scrollRef.current && (scrollRef.current.scrollTop = scrollRef.current.scrollHeight);
+    scrollRef.current &&
+      (scrollRef.current.scrollTop = scrollRef.current.scrollHeight);
   }, []);
   return (
     <div className="wrapper">
@@ -111,7 +117,12 @@ const Chatbox = () => {
           }}
           placeholder="메시지 기입"
         />
-        <input type="button" className="submitmsg" value="send" onClick={sendBtn} />
+        <input
+          type="button"
+          className="submitmsg"
+          value="send"
+          onClick={sendBtn}
+        />
       </div>
     </div>
   );
